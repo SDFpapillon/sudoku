@@ -7,7 +7,14 @@ typedef int sudoku[9][9];
 /*Affiche la grille actuelle du sudoku passé en paramètre*/
 void afficherSudoku(sudoku s)
 {
-  // TODO: à implémenter
+  {
+  for (int i=0; i<9; i++){
+    for (int y=0; y<9; y++){
+      printf("%i ",s[i][y]);
+    }
+    printf("\n");
+  }
+}
 }
 
 /*Vérifie s'il est valide de poser la valeur n en x et y en fonction des éléments déjà présents sur la ligne */
@@ -37,11 +44,16 @@ bool estValideV(sudoku s, int x, int y, int n)
 /*Vérifie s'il est valide de poser la valeur n en x et y en fonction des éléments déjà présents sur la région (3x3)*/
 bool estValideR(sudoku s, int x, int y, int n)
 {
-
-
-
-  return false;
-    // TODO: à implémenter
+    int sx = (x/3);
+    int sy = (y/3);
+    for (int i = 0; i<3; i++){
+        for (int k = 0; k<3; k++){
+            if (n == s[3*sx+i][3*sy+k]) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 
@@ -49,17 +61,22 @@ bool estValideR(sudoku s, int x, int y, int n)
 appelle les fonctions estValideH, estValideV, estValideR, */
 bool estValide(sudoku s, int x, int y, int n)
 {
-
-  return false;
-    // TODO: à implémenter
+  return estValideH(s, x, y, n) || estValideV(s, x, y, n) || estValideR(s, x, y, n);
 }
 
 /*nombre de cases encore vides sur la grille de sudoku */
 int compterLibres(sudoku s)
 {
+    int acc = 0;
+    for (int i = 0; i < 9; i++) {
+        for (int j =0; j < 9; j++) {
+            if (s[i][j] == 0) {
+                acc++;
+            }
+        }
+    }
 
-  return 42;
-  // TODO: à implémenter
+  return acc;
 }
 
 
@@ -94,6 +111,9 @@ bool lireAction(int* entreeX, int* entreeY, int* entreeV)
     printf("demande d'action invalide (on sort des bornes)\n");
     return false;
   }
+
+  entreeY--;
+  entreeX--;
 
   return true;
 }
@@ -135,6 +155,23 @@ int main()
 
   // TODO : implémenter l'interaction avec l'utilisateur·rice
   // pour réaliser le jeu interactif.
+
+  int entreeX = 0;
+  int entreeY = 0;
+  int entreeV = 0;
+  int nombre0 = compterLibres;
+
+  while(nombre0 != 0) {
+    afficherSudoku(sudoku1);
+    lireAction(&entreeX, &entreeY, &entreeV);
+
+    if (estValide(sudoku1, entreeX, entreeY, entreeV)) {
+        printf("gg \n");
+    }
+  }
+
+
+
 
   return 0;
 }
