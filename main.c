@@ -10,9 +10,14 @@ void afficherSudoku(sudoku s)
   {
   for (int i=0; i<9; i++){
     for (int y=0; y<9; y++){
-      printf("%i ",s[i][y]);
+      if (s[i][y] == 0) {
+      printf("\033[31m%i ", 0);
+      }
+      else {
+        printf("\033[0m%i ",s[i][y]);
+      }
     }
-    printf("\n");
+    printf("\033[0m\n");
   }
 }
 }
@@ -155,22 +160,27 @@ int main()
   int entreeX = 0;
   int entreeY = 0;
   int entreeV = 0;
-  int nombre0 = compterLibres;
+  int nombre0 = compterLibres(sudoku1);
+  int nombre0_ = nombre0;
 
   while(nombre0 != 0) {
+    printf("il vous reste, %d (%d %%) nombre a trouver \n \nvoici la grille : \n", nombre0, 100*(nombre0)/nombre0_);
     afficherSudoku(sudoku1);
     lireAction(&entreeX, &entreeY, &entreeV);
 
+
+
     if (estValide(sudoku1, entreeX, entreeY, entreeV)) {
         sudoku1[entreeX][entreeY] = entreeV;
+        nombre0 = nombre0 - 1;
     }
     else {
-        printf("entree non valide, vous vous etes tromper \n \n");
+        printf("entree non valide, vous vous etes trompe \n \n");
     }
   }
 
 
-
+  printf("bravo tu as gagner! \n");
 
   return 0;
 }
