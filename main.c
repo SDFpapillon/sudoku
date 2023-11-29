@@ -61,7 +61,7 @@ bool estValideR(sudoku s, int x, int y, int n)
 appelle les fonctions estValideH, estValideV, estValideR, */
 bool estValide(sudoku s, int x, int y, int n)
 {
-  return estValideH(s, x, y, n) || estValideV(s, x, y, n) || estValideR(s, x, y, n);
+  return estValideH(s, x, y, n) && estValideV(s, x, y, n) && estValideR(s, x, y, n) && s[x][y] == 0;
 }
 
 /*nombre de cases encore vides sur la grille de sudoku */
@@ -111,10 +111,6 @@ bool lireAction(int* entreeX, int* entreeY, int* entreeV)
     printf("demande d'action invalide (on sort des bornes)\n");
     return false;
   }
-
-  entreeY--;
-  entreeX--;
-
   return true;
 }
 
@@ -166,7 +162,10 @@ int main()
     lireAction(&entreeX, &entreeY, &entreeV);
 
     if (estValide(sudoku1, entreeX, entreeY, entreeV)) {
-        printf("gg \n");
+        sudoku1[entreeX][entreeY] = entreeV;
+    }
+    else {
+        printf("entree non valide, vous vous etes tromper \n \n");
     }
   }
 
