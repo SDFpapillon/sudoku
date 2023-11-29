@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+typedef struct mins {
+    int x;
+    int y;
+    int n;
+    int* h;
+} mins;
+
 typedef int sudoku[9][9];
 
 /*Affiche la grille actuelle du sudoku passé en paramètre*/
@@ -85,13 +92,7 @@ int compterLibres(sudoku s)
 }
 
 
-int resoudreSudoku(sudoku s)
-{
-  // TODO: à implémenter - (BONUS)
 
-  return 0;
-
-}
 
 /* Demande une action de résolution à l'utilisateur·rice
 *
@@ -120,6 +121,77 @@ bool lireAction(int* entreeX, int* entreeY, int* entreeV)
 }
 
 
+mins mini_hypo(sudoku s){
+    int min=9;
+    int x=10;
+    int y=10;
+    int* minh;
+    for (int i = 0; i<9; i++){
+        for (int j = 0; j<9; j++){
+            int a = 0;
+            int h[9];
+            for (int k = 0; k < 9; k++)
+            {
+                if (estValide(s, i, j, k)){
+                    h[a] = k;
+                    a++;
+                }
+            }
+            if (a<min){
+                minh = h;
+                x = i;
+                y = j;
+            }
+        }
+    }
+    return (mins){
+        .x=x,
+        .y=y,
+        .n=min,
+        .h=minh
+    };
+}
+
+
+int** resoudreSudoku(sudoku s)
+{
+  if (compterLibres(s) == 0) {
+    return s;
+  }
+  else {
+
+    mins hypothese = mini_hypo(s);
+
+    int x = hypothese.x;
+    int y = hypothese.y;
+
+    if (hypothese.n == 0){
+      return s;
+    }
+
+    else if (hypothese.n == 1) {
+      s[x][y] = hypothese.h[0];
+
+      return resoudreSudoku(s);
+    }
+    else {
+      int n = 0;
+      int n_max = hypothese.n;
+
+      for(n; n<n_max; n++) {
+        s[x][y] = hypothese.h[n];
+        int** s_ = malloc(10);
+        s_ = resoudreSudoku(s);
+        if (compterLibres(s_) == 0) {
+            return s_;
+        }
+      }
+
+    }
+
+  }
+}
+
 /* Dans ce main, on affiche le sudoku à résoudre, et
    l'utilisateur·rice essaie de le résoudre interactivement en donnant
    x, y et une valeur, tant qu'il ne reste pas de case vide.
@@ -139,6 +211,20 @@ int main()
     { 0, 0, 0, 0, 0, 3, 4, 0, 7},
     { 4, 6, 0, 0, 0, 0, 0, 3, 1}
   };
+
+  sudoku s = {
+    { 0, 9, 4, 2, 0, 6, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 4, 0, 1, 0 },
+    { 7, 8, 0, 3, 0, 0, 2, 0, 0 },
+    { 0, 4, 3, 0, 7, 5, 1, 8, 2 },
+    { 8, 5, 6, 0, 3, 2, 9, 0, 4 },
+    { 0, 0, 0, 0, 9, 8, 0, 6, 0 },
+    { 0, 0, 7, 8, 0, 0, 0, 0, 0},
+    { 0, 0, 0, 0, 0, 3, 4, 0, 7},
+    { 4, 6, 0, 0, 0, 0, 0, 3, 1}
+  };
+
+  afficherSudoku(resoudreSudoku(s));
 
   // Solution du sudoku1 -
   /*
